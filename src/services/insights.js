@@ -1,7 +1,6 @@
-import { auth, accounts, quotes } from 'wstrade-api';
-
+import pkg from "wstrade-api";
+const { auth, accounts, quotes } = pkg;
 export async function insights(event) {
-
   if (!event.access || !event.refresh || !event.expires) {
     return "Invalid authentication";
   }
@@ -27,21 +26,24 @@ export async function insights(event) {
       }
 
       // Only pull 1 year for crypto due to asymmetric data mentioned above
-      performance[account] = await accounts.history(account === 'crypto' ? '1y' : 'all', accs[account]);
+      performance[account] = await accounts.history(
+        account === "crypto" ? "1y" : "all",
+        accs[account]
+      );
     })
   );
 
-  const securityIntervals = [ '1w', '1m', '3m', '1y', '5y' ];
+  const securityIntervals = ["1w", "1m", "3m", "1y", "5y"];
   const fetchSecurityQuoteIntervals = async (security) => {
     const prices = {};
     await Promise.all(
       securityIntervals.map(async (interval) => {
         prices[interval] = await quotes.history(security, interval);
-      }
-    ));
+      })
+    );
 
     return prices;
-  }
+  };
 
   // return an object of the Wealthsimple data
   return {
@@ -50,8 +52,8 @@ export async function insights(event) {
     performance,
     securities: {
       history: {
-        veqt: await fetchSecurityQuoteIntervals('VEQT:TSX')
-      }
+        veqt: await fetchSecurityQuoteIntervals("VEQT:TSX"),
+      },
     },
     activities: await accounts.activities(),
   };
