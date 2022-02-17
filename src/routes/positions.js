@@ -22,6 +22,7 @@ const wsTodbStock = (e) => {
     e.quantity * parseFloat(e.quote.amount) - e.market_book_value.amount;
 
   let stock = {
+    ...e,
     symbol: e.stock.symbol,
     companyName: e.stock.name,
     marketName: e.stock.primary_exchange,
@@ -50,6 +51,7 @@ const wsTodbStock = (e) => {
 
 const bStockTows = (e) => {
   let stock = {
+    ...e,
     symbol: e.symbol,
     name: e.companyName,
     //marketName,
